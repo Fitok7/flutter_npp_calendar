@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_npp_app/dataService.dart';
 import 'package:flutter_npp_app/types.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 void main() {
   runApp(MaterialApp(
+    localizationsDelegates: [
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+    ],
+    supportedLocales: [const Locale('ru')],
+    locale: const Locale('ru'),
     home: Home(),
   ));
 }
@@ -43,13 +51,21 @@ class _HomeWidgetState extends State<Home> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Flexible(
-              child: CalendarCarousel(
-            daysHaveCircularBorder: false,
-            locale: 'ru_Ru',
-            selectedDateTime: selectedDate,
-            onDayPressed: (DateTime date, List<Event> events) =>
-                {selectedDate = date, super.setState(() {})},
-          )),
+              child: SfCalendar(
+                  selectionDecoration: BoxDecoration(
+                    color: Colors.transparent,
+                    border: Border.all(color: Colors.red, width: 2),
+                    borderRadius: const BorderRadius.all(Radius.circular(4)),
+                    shape: BoxShape.rectangle,
+                  ),
+                  timeZone: 'Europe/Moscow',
+                  view: CalendarView.month,
+                  onTap: (calendarTapDetails) => {
+                        selectedDate = calendarTapDetails.date,
+                        super.setState(() {})
+                      },
+                  showNavigationArrow: true,
+                  initialSelectedDate: selectedDate)),
           Center(
               child: Center(
                   child: Text(formatter.format(selectedDate),
